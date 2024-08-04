@@ -41,3 +41,5 @@ typedef struct instruction_s
 
 extern stack_t *stack;
 void f_push(stack_t **stack, unsigned int line_number);
+
+#endif
