@@ -26,6 +26,23 @@ typedef struct stack_s
 } stack_t;
 
 /**
+ * struct bus_s - global bus for monty interpreter
+ * @arg: argument to be pushed to the stack
+ * @file: file being read
+ * @content: content of the file
+ * @lifi: LIFO (0) or FIFO (1) mode
+ *
+ * Description: global bus for monty interpreter
+ */
+typedef struct bus_s
+{
+	char *arg;
+	FILE *file;
+	char *content;
+	int lifi;
+} bus_t;
+extern bus_t bus;
+/**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
@@ -39,8 +56,9 @@ typedef struct instruction_s
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern stack_t *stack;
-void f_push(stack_t **stack, unsigned int line_number);
-void f_pall(stack_t **stack, unsigned int line_number);
-
+char *_realloc(char *ptr, unsigned int old_size, unsigned int new_size);
+ssize_t getstdin(char **lineptr, int file);
+char  *clean_line(char *content);
+void f_push(stack_t **head, unsigned int number);
+void f_pall(stack_t **head, unsigned int number);
 #endif
