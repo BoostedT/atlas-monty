@@ -13,29 +13,56 @@ size_t size = 0;
 ssize_t read_line = 1;
 stack_t *stack = NULL;
 unsigned int counter = 0;
+bus_t bus = {NULL, NULL, NULL, 0};
+instruction_t instructions[] = {
+{"push", f_push},
+{"pall", f_pall},
+{NULL, NULL}
+};
 if (argc != 2)
 {
 fprintf(stderr, "USAGE: monty file\n");
 exit(EXIT_FAILURE);
 }
 file = fopen(argv[1], "r");
-bus.file = file;
 if (!file)
 {
 fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 exit(EXIT_FAILURE);
 }
-while (read_line > 0)
+bus.file = file;
+while (read_line != -1)
 {
-content = NULL;
-read_line = getline(&content, &size, file);
-bus.content = content;
+read_line = getstdin(&content, 0);
 counter++;
-if (read_line > 0)
+if (read_line == -1)
 {
-execle(content, &stack, counter, file);
-}
 free(content);
+break;
+}
+bus.content = content;
+content = clean_line(content);
+if (content)
+{
+bus.arg = strtok(content, " \n");
+if (bus.arg && bus.arg[0] != '#')
+{
+for (int i = 0; instructions[i].opcode; i++)
+{
+if (strcmp(instructions[i].opcode, bus.arg) == 0)
+{
+instructions[i].f(&stack, counter);
+break;
+}
+if (!instructions[i + 1].opcode)
+{
+fprintf(stderr, "L%u: unknown instruction %s\n", counter, bus.arg);
+exit(EXIT_FAILURE);
+}
+}
+}
+}
+free(bus.content);
 }
 free_stack(stack);
 fclose(file);
