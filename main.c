@@ -32,7 +32,7 @@ exit(EXIT_FAILURE);
 bus.file = file;
 while (read_line != -1)
 {
-read_line = getstdin(&content, 0);
+read_line = getline(&content, &(size_t){0}, file);
 counter++;
 if (read_line == -1)
 {
