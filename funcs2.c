@@ -14,20 +14,6 @@ free(head);
 head = aux;
 }
 }
-
-/**
- * f_queue - prints the top
- * @head: stack head
- * @counter: line_number
- * Return: no return
-*/
-void f_queue(stack_t **head, unsigned int counter)
-{
-	(void)head;
-	(void)counter;
-	bus.lifi = 1;
-}
-
 /**
  * addqueue - add node to the tail stack
  * @n: new_value
@@ -62,14 +48,43 @@ new_node->prev = aux;
 }
 }
 /**
- * f_stack - prints the top
+ * f_add - adds the top two elements of the stack.
  * @head: stack head
  * @counter: line_number
  * Return: no return
 */
-void f_stack(stack_t **head, unsigned int counter)
+void f_add(stack_t **head, unsigned int counter)
 {
-(void)head;
-(void)counter;
-bus.lifi = 0;
+stack_t *h;
+int len = 0, aux;
+h = *head;
+while (h)
+{
+h = h->next;
+len++;
+}
+if (len < 2)
+{
+fprintf(stderr, "L%d: can't add, stack too short\n", counter);
+fclose(bus.file);
+free(bus.content);
+free_stack(*head);
+exit(EXIT_FAILURE);
+}
+h = *head;
+aux = h->n + h->next->n;
+h->next->n = aux;
+*head = h->next;
+free(h);
+}
+/**
+  *f_nop- nothing
+  *@head: stack head
+  *@counter: line_number
+  *Return: no return
+ */
+void f_nop(stack_t **head, unsigned int counter)
+{
+	(void) counter;
+	(void) head;
 }
